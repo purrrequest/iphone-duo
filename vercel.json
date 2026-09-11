@@ -1,5 +1,0 @@
-{
-  "buildCommand": "pip3 install -r requirements-assets.txt && python3 scripts/prepare-assets.py",
-  "outputDirectory": ".",
-  "installCommand": "true"
-}

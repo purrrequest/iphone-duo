@@ -6,19 +6,22 @@ The Apple model only ships two baked poses in its USD "Pose" variant set (`Close
 
 ## Run locally
 
-Static HTML/CSS/JS, no build step. Three.js is bundled in `vendor/`.
+Static HTML/CSS/JS, no build step. Three.js is bundled in `vendor/`, and the prepared Apple reference assets are checked into `assets/`.
 
-The Apple reference assets are prepared separately (Python 3.12+):
+```bash
+python3 -m http.server 8766 --bind 127.0.0.1
+```
+
+Open `http://127.0.0.1:8766/`.
+
+To regenerate `assets/` from Apple's original sources yourself (Python 3.12+):
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install usd-core
 python scripts/prepare-assets.py
-python -m http.server 8766 --bind 127.0.0.1
 ```
-
-Open `http://127.0.0.1:8766/`. The prepared files land in the ignored `assets/` directory.
 
 ## Using it
 
@@ -42,7 +45,7 @@ Open `http://127.0.0.1:8766/`. The prepared files land in the ignored `assets/` 
 
 Original and modified application code is released under the MIT license (see `LICENSE`), carrying forward the upstream project's license.
 
-Apple's model, embedded model textures, and screen imagery are excluded from the repository and the MIT license; `scripts/prepare-assets.py` links to their original sources and their use is subject to Apple's terms. This project is an independent animation study, not an Apple product.
+Apple's model, embedded model textures, and screen imagery under `assets/` are excluded from the MIT license and remain Apple's; `scripts/prepare-assets.py` links to their original sources, and their use here is subject to Apple's terms. This project is an independent animation study, not an Apple product.
 
 - [Apple iPhone Duo](https://www.apple.com/iphone-duo/)
 - [Apple HIG: Designing for iPhone Duo](https://developer.apple.com/design/human-interface-guidelines/designing-for-iphone-duo)
