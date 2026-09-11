@@ -31,6 +31,7 @@ button{font:inherit;cursor:pointer}
 button:disabled{cursor:wait;opacity:.35}
 main{height:100dvh;position:relative}
 #viewport{position:absolute;inset:0 0 172px;touch-action:none}
+.disclaimer{position:absolute;left:0;right:0;bottom:calc(6px + env(safe-area-inset-bottom));margin:0;padding:0 16px;text-align:center;font-size:10px;line-height:1.4;color:var(--segment-text);pointer-events:none}
 canvas{display:block;outline:none}
 .icon-button{flex-shrink:0;width:36px;height:36px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--divider);background:transparent;color:var(--text);text-decoration:none;transition:background .2s}
 .icon-button:hover{background:var(--segment-bg)}
