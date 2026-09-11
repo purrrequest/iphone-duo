@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>iPhone Duo · Seated Fold Preview</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved);
+      var savedBg = localStorage.getItem('bgColor');
+      if (savedBg) document.documentElement.style.setProperty('--bg', savedBg);
+    })();
+  </script>
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <main>
+    <div id="viewport" aria-label="iPhone Duo 3D model. Drag to rotate, scroll to zoom."></div>
+    <div class="top-left-controls">
+      <button class="icon-button theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <input type="color" class="icon-button bg-color-swatch" id="bg-color" aria-label="Background color" title="Background color">
+    </div>
+    <div class="social-links">
+      <a class="icon-button" href="https://x.com/purrrealist" target="_blank" rel="noopener noreferrer" aria-label="View on X" title="View on X">
+        <svg class="icon-x" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2H21.5l-7.5 8.57L22.75 22H16.1l-5.2-6.79L4.9 22H1.64l8.02-9.17L1 2h6.83l4.7 6.2L18.244 2Zm-1.16 18h1.8L7.02 3.9H5.1L17.084 20Z"/></svg>
+      </a>
+      <a class="icon-button" href="#" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub" title="View on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.2c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.22.68-.49 0-.24-.01-1.03-.01-1.87-2.78.61-3.37-1.21-3.37-1.21-.46-1.18-1.11-1.5-1.11-1.5-.91-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.9 1.55 2.36 1.11 2.94.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.13-4.56-5.02 0-1.11.39-2.02 1.03-2.73-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.04a9.4 9.4 0 0 1 5 0c1.9-1.31 2.75-1.04 2.75-1.04.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.73 0 3.9-2.34 4.76-4.57 5.01.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.2C22 6.58 17.52 2 12 2Z"/></svg>
+      </a>
+    </div>
+    <div class="control-dock">
+    <aside class="screen-panel" aria-label="Screen UI">
+      <div class="ui-themes" role="tablist" aria-label="Screen UI type">
+        <button role="tab" class="ui-pill" data-ui-theme="wallpaper" aria-selected="true" disabled>Wallpaper</button>
+        <button role="tab" class="ui-pill" data-ui-theme="launcher" aria-selected="false" disabled>Launcher</button>
+        <button role="tab" class="icon-button ui-add" data-ui-theme="custom" aria-selected="false" aria-label="Upload custom image" title="Upload custom image" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <input id="ui-upload" type="file" accept="image/*" hidden disabled>
+    </aside>
+    <section class="controls" aria-label="Fold controls">
+      <div class="fold-slider">
+        <div class="fold-endpoint" aria-hidden="true">
+          <span class="angle-bound">0°</span>
+          <span class="fold-label">Closed</span>
+        </div>
+        <div class="fold-track">
+          <input id="angle" aria-label="Fold amount" type="range" min="0" max="180" value="180" step="0.1" disabled>
+          <div class="fold-labels" aria-hidden="true">
+            <span class="fold-label" id="label-seated" data-align="center">Seated</span>
+          </div>
+        </div>
+        <div class="fold-endpoint" aria-hidden="true">
+          <span class="angle-bound">180°</span>
+          <span class="fold-label">Portrait</span>
+        </div>
+        <span class="fold-spacer" aria-hidden="true"></span>
+      </div>
+      <button id="fold-toggle" class="fold-toggle" disabled>Fold</button>
+    </section>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var button = document.getElementById('theme-toggle');
+      var bgInput = document.getElementById('bg-color');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      function currentTheme() {
+        var attr = document.documentElement.getAttribute('data-theme');
+        return attr || (prefersDark.matches ? 'dark' : 'light');
+      }
+      function updateLabel() {
+        var isDark = currentTheme() === 'dark';
+        button.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+      function setTheme(next) {
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateLabel();
+      }
+      // Perceived brightness (YIQ), so light-on-light / dark-on-dark text
+      // never happens no matter which background color gets picked.
+      function isLight(hex) {
+        var r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+        return (r * 299 + g * 587 + b * 114) / 1000 >= 140;
+      }
+      button.addEventListener('click', function () {
+        setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+      });
+      updateLabel();
+
+      var savedBg = localStorage.getItem('bgColor');
+      if (savedBg) {
+        bgInput.value = savedBg;
+      } else {
+        var current = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+        if (/^#[0-9a-f]{6}$/i.test(current)) bgInput.value = current;
+      }
+      bgInput.addEventListener('input', function () {
+        document.documentElement.style.setProperty('--bg', bgInput.value);
+        localStorage.setItem('bgColor', bgInput.value);
+        setTheme(isLight(bgInput.value) ? 'light' : 'dark');
+      });
+    })();
+  </script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
