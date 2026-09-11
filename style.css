@@ -31,7 +31,7 @@ button{font:inherit;cursor:pointer}
 button:disabled{cursor:wait;opacity:.35}
 main{height:100dvh;position:relative}
 #viewport{position:absolute;inset:0 0 172px;touch-action:none}
-.disclaimer{flex-basis:100%;margin:24px 0 0;text-align:center;font-size:10px;line-height:1.4;color:var(--segment-text);pointer-events:none}
+.disclaimer{flex-basis:100%;margin:50px 0 0;text-align:center;font-size:10px;line-height:1.4;color:var(--segment-text);pointer-events:none}
 canvas{display:block;outline:none}
 .icon-button{flex-shrink:0;width:36px;height:36px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--divider);background:transparent;color:var(--text);text-decoration:none;transition:background .2s}
 .icon-button:hover{background:var(--segment-bg)}
@@ -90,11 +90,10 @@ button:focus-visible,.icon-button:focus-visible{outline:2px solid var(--focus-ri
   .controls{display:contents}
   .fold-slider{grid-area:slider}
   .fold-toggle{grid-area:fold;align-self:center}
-  /* The grid's row-gap (kept large to space the slider from the row above)
-     would also push the disclaimer 32px away; pull it back to the 24px this
-     row actually wants, and pad the bottom out to the full 20px since the
-     dock's own bottom padding is only 16px here. */
-  .disclaimer{grid-area:disclaimer;margin-top:-8px;margin-bottom:4px}
+  /* The grid's row-gap (32px) is smaller than the 60px this row wants, so
+     add the difference on top; also pad the bottom out to the full 20px
+     since the dock's own bottom padding is only 16px here. */
+  .disclaimer{grid-area:disclaimer;margin-top:28px;margin-bottom:4px}
   /* This spacer normally reserves room for the Fold button that follows the
      slider in the desktop row; here the button has moved to the row above,
      so drop it and let the track reach the true right edge. Hiding it alone
